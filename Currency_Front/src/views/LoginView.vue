@@ -2,7 +2,6 @@
 import axios from "axios";
 import AddAndEditCurrency from "@/components/AddAndEditCurrency.vue";
 import AddAndEditPair from "@/components/AddAndEditPair.vue";
-import EditCurrency from "@/components/EditCurrency.vue";
 ;
 export default {
     data() {
@@ -11,10 +10,13 @@ export default {
             password:"",
         };
     },
-    emits: ["connexion"],
+    emits: ["connexion", "logout"],
     methods: {
         connexion(){
             this.$emit("connexion", this.email, this.password);
+        },
+        logout(){
+            this.$emit("logout");
         }
         
     },
@@ -50,6 +52,9 @@ export default {
                 </div>
             </div>
         </form>
+        <button v-on:click.prevent="logout">
+            logout
+        </button>
     </div>
 
 </template>

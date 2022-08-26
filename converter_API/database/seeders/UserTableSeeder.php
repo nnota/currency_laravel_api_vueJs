@@ -24,5 +24,12 @@ class UserTableSeeder extends Seeder
 			'password'          => Hash::make('admin'), // admin
 			'remember_token'    => Str::random(10),
 		]);
+        User::create([
+			'name'              => 'Minh',
+			'email'             => 'admi@admi.fr',
+			'email_verified_at' => now(),
+			'password'          => Hash::make('admi'), // admi
+			'remember_token'    => Str::random(10),
+		]);
     }
 }
