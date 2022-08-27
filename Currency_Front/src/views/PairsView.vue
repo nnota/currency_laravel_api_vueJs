@@ -1,15 +1,12 @@
 <script>
 import axios from "axios";
 import AddAndEditPair from "@/components/AddAndEditPair.vue";
-import AddAndEditCurrency from "@/components/AddAndEditCurrency.vue";
-import Header from "@/components/Header.vue";
+
 export default {
   components: {
     AddAndEditPair,
-    AddAndEditCurrency,
-    Header,
   },
-  emits: ["getCurrency", "getPairs", "getConverts", "connexion", "logout"],
+  emits: ["getCurrency", "getPairs","getConverts", "connexion", "logout"],
   props: {
     currency: {
       type: Array,
@@ -31,19 +28,6 @@ export default {
     },
   },
   methods: {
-    createCurrency(nameCurrency) {
-      console.log(nameCurrency);
-      axios
-        .post(this.urlCurrency, {
-          name: nameCurrency,
-        })
-        .then(() => {
-          this.$emit("getCurrency");
-        })
-        .catch((e) => {
-          alert(e);
-        });
-    },
     editCurrency(id, currencyNameEdit) {
       console.log(id, currencyNameEdit);
       axios
@@ -54,19 +38,6 @@ export default {
           this.$emit("getCurrency");
         })
         .catch((e) => {
-          alert(e);
-        });
-    },
-    deleteCurrency(id) {
-      console.log(id, `${this.urlCurrency}/${id}`);
-      axios
-        .delete(`${this.urlCurrency}/${id}`)
-        .then(() => {
-          this.$emit("getCurrency");
-          this.$emit("getPairs");
-        })
-        .catch((e) => {
-          console.log("error");
           alert(e);
         });
     },
@@ -149,7 +120,6 @@ export default {
 };
 </script>
 <template>
-  <Header/>
   <AddAndEditPair
     :currency="currency"
     :pairs="pairs"
@@ -159,14 +129,5 @@ export default {
     @editPair="editPair"
     @deletePair="deletePair"
   />
-  <AddAndEditCurrency
-    :currency="currency"
-    :urlCurrency="urlCurrency"
-    @createCurrency="createCurrency"
-    @editCurrency="editCurrency"
-    @deleteCurrency="deleteCurrency"
-  />
 </template>
-
-
 

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             PairsSeeder::class,
             UserTableSeeder::class,
+            ConvertsSeed::class,
 		]);
     }
 }

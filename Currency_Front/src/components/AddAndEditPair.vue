@@ -12,6 +12,9 @@ export default {
     pairs: {
       type: Array,
     },
+    converts: {
+      type: Array,
+    },
     urlPairs: {
       type: String,
     },
@@ -31,21 +34,68 @@ export default {
       },
       edit: false,
       idEdit: 0,
+      currencyNameInit: "",
+      currencyNameDest: "",
+      messageError: "",
+      messageSuccess: "",
     };
   },
   methods: {
     createPairs() {
+      this.messageError = "";
+      this.messageSuccess = "";
+      let pairAlreadyExists = false;
+      let pairInitDestSame = false;
       console.log(
         this.selectInit.pairCurrencyInit,
-        this.selectDest.pairCurrencyDest,
-        this.rate
+        this.selectDest.pairCurrencyDest
       );
-      this.$emit(
-        "createPairs",
-        this.selectInit.pairCurrencyInit,
-        this.selectDest.pairCurrencyDest,
-        this.rate
-      );
+      this.currency.forEach((currency) => {
+        if (currency.id == this.selectInit.pairCurrencyInit) {
+          this.currencyNameInit = currency.name;
+        }
+        if (currency.id == this.selectDest.pairCurrencyDest) {
+          this.currencyNameDest = currency.name;
+        }
+      });
+      this.pairs.forEach((pair) => {
+        pair = pair.split(", ")[1];
+        pair = pair.split(" => ");
+        if (
+          pair[0] == this.currencyNameInit &&
+          pair[1] == this.currencyNameDest
+        ) {
+          pairAlreadyExists = true;
+        }
+        console.log(pair[0], pair[1]);
+        if (this.currencyNameInit == this.currencyNameDest) {
+          pairInitDestSame = true;
+          console.log(this.pairInitDestSame);
+        }
+      });
+      if (!pairAlreadyExists) {
+        console.log(pairAlreadyExists);
+        if (!pairInitDestSame) {
+          console.log(pairInitDestSame);
+          if (this.rate > 0) {
+            console.log(this.rate);
+            this.$emit(
+              "createPairs",
+              this.selectInit.pairCurrencyInit,
+              this.selectDest.pairCurrencyDest,
+              this.rate
+            );
+            this.messageSuccess = "la paire a bien été ajouté !";
+          } else {
+            this.messageError = "le taux de change doit etre supérieur à 0";
+          }
+        } else {
+          this.messageError =
+            "une paire ne peut pas avoir la meme devise de départ et d'arrivée";
+        }
+      } else {
+        this.messageError = "la paire existe déjà !";
+      }
     },
     getPairById(id) {
       axios.get(`${this.urlPairs}/${id}`).then((data) => {
@@ -70,8 +120,33 @@ export default {
       );
       this.edit = false;
     },
-    deletePair(id) {
+    deletePair(id, init, dest) {
+      console.log(id, init, dest);
+      let idReverseToDelete = 0;
+      this.pairs.forEach((pair) => {
+        let id_pair = pair.split(",")[0];
+        console.log(id_pair);
+        pair = pair.split(", ")[1];
+        pair = pair.split(" => ");
+        console.log(pair[0] + " => " + dest, pair[1] + " => " + init);
+        if (pair[0] == dest && pair[1] == init) {
+          idReverseToDelete = id_pair;
+          console.log(idReverseToDelete);
+        }
+      });
       this.$emit("deletePair", id);
+      if (idReverseToDelete > 0) {
+        this.$emit("deletePair", idReverseToDelete);
+      }
+    },
+    getConvertByPairID(id) {
+      let countConvert = 0;
+      this.converts.forEach((convert) => {
+        if (convert.id_pair == id) {
+          countConvert = convert.count_conversion;
+        }
+      });
+      return countConvert;
     },
   },
   created() {},
@@ -79,11 +154,27 @@ export default {
 </script>
 
 <template>
+  <div>
+    <span
+      >Si la devise que vous cherchez n'existe pas , vous pouvez la créer </span
+    ><a href="/admin/currencies">ici</a>
+  </div>
   <h3>Toutes les paires disponibles</h3>
   <div v-for="item in pairs" class="row">
     <p>{{ item.substr(item.indexOf(",") + 1) }}</p>
+    <p>=> nombre de requetes : {{ getConvertByPairID(item.split(",")[0]) }}</p>
     <button @click="editChoose(item.split(',')[0])">Modifier</button>
-    <button @click="deletePair(item.split(',')[0])">Supprimer</button>
+    <button
+      @click="
+        deletePair(
+          item.split(',')[0],
+          item.split(', ')[1].split(' => ')[0],
+          item.split(', ')[1].split(' => ')[1]
+        )
+      "
+    >
+      Supprimer
+    </button>
     <br />
     <div v-if="edit == true && idEdit == item.split(',')[0]">
       <br />
@@ -141,6 +232,8 @@ export default {
         </div>
       </div>
     </form>
+    <p class="txtError">{{ messageError }}</p>
+    <p class="txtSuccess">{{ messageSuccess }}</p>
   </div>
 </template>
 
@@ -184,5 +277,11 @@ button {
 }
 .row {
   display: flex;
+}
+.txtError {
+  color: red;
+}
+.txtSuccess {
+  color: green;
 }
 </style>

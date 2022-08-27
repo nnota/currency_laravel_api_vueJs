@@ -30,33 +30,29 @@ export default {
       });
     },
     connexion(email, password){
-      console.log(email, password);
-      axios.post('http://127.0.0.1:8000/api/login', {
+      if(password=="" || email==""){
+        
+        window.alert("Mot de passe et email ne sont pas vide!")
+      }
+      else{
+        axios.post('http://127.0.0.1:8000/api/login', {
         email: email,
         password: password,
-      })
-      .then(({data}) => {
-          if (data["message"] == "User login successfully."){
-            console.log(data["data"]["token"])
-              // localStorage.setItem("acces_token", data["data"]["token"].split("")[1]);
-              localStorage.setItem("access_token", data["data"]["token"]);
-              localStorage.setItem("nameAdmin", data["data"]["name"]);
-              this.$router.push("/admin");
-          };
-      })
-      .catch((error) => {
-          console.log(error);
-      });
+        })
+        .then(({data}) => {
+            if (data["message"] == "User login successfully."){
+                localStorage.setItem("access_token", data["data"]["token"]);
+                localStorage.setItem("nameAdmin", data["data"]["name"]);
+                this.$router.push("/admin");
+            };
+        })
+        .catch((error) => {
+            window.alert("Mot de passe ou email n'est pas correct!")
+        });
+      } 
     },
     logout()
     {
-      // const config = {
-      //       method: 'post',
-      //       url: 'http://127.0.0.1:8000/api/logout',
-      //       headers: { 
-      //           'Authorization': 'basic T64Mdy7m['
-      //       }
-      //   };
       let token = localStorage.getItem("access_token");
       // console.log(`Bearer ${token}`);
       console.log({
@@ -79,7 +75,7 @@ export default {
           console.log(error);
       });
 
-    }
+    },
   },
   created() {
     this.getCurrency();

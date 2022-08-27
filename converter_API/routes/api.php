@@ -41,3 +41,6 @@ Route::controller(RegisterController::class)->group(function(){
 Route::apiResource("currencies", AdminCurrencyController::class)->except(['create','edit','delete']);
 Route::apiResource("pairs", AdminPairsController::class)->except(['create','edit','delete']);
 Route::apiResource("converts", AdminConvertsController::class)->except(['create','edit']);
+
+
+Route::get("converts/{change}/{currencyInit}/{currencyDest}", [AdminConvertsController::class, 'convert']);

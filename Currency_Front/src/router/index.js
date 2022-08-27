@@ -38,6 +38,16 @@ const router = createRouter({
       name: "login",
       component: LoginView,
     },
+    {
+      path: "/admin/currencies",
+      name: "currencies",
+      component: () => import("../views/CurrenciesView.vue"),
+    },
+    {
+      path: "/admin/pairs",
+      name: "pairs",
+      component: () => import("../views/PairsView.vue"),
+    },
   ],
 });
 
