@@ -1,10 +1,12 @@
 <script>
 import axios from "axios";
 import AddAndEditCurrency from "@/components/AddAndEditCurrency.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   components: {
     AddAndEditCurrency,
+    Header,
   },
   emits: ["getCurrency", "getPairs","getConverts", "connexion", "logout"],
   props: {
@@ -23,10 +25,12 @@ export default {
     urlConverts: {
       type: String,
     },
+    pairs: {
+        type: Array, 
+    }
   },
   methods: {
     createCurrency(nameCurrency) {
-      console.log(nameCurrency);
       axios
         .post(this.urlCurrency, {
           name: nameCurrency,
@@ -39,7 +43,6 @@ export default {
         });
     },
     editCurrency(id, currencyNameEdit) {
-      console.log(id, currencyNameEdit);
       axios
         .put(`${this.urlCurrency}/${id}`, {
           name: currencyNameEdit,
@@ -52,7 +55,6 @@ export default {
         });
     },
     deleteCurrency(id) {
-      console.log(id, `${this.urlCurrency}/${id}`);
       axios
         .delete(`${this.urlCurrency}/${id}`)
         .then(() => {
@@ -64,17 +66,36 @@ export default {
           alert(e);
         });
     },
+    logout(){
+        this.$emit("logout");
+    }
   },
   created() {},
 };
 </script>
 <template>
-  <AddAndEditCurrency
-    :currency="currency"
-    :urlCurrency="urlCurrency"
-    @createCurrency="createCurrency"
-    @editCurrency="editCurrency"
-    @deleteCurrency="deleteCurrency"
-  />
+    <Header
+        @logout="logout"
+    />
+    <div class="body">
+        <div >
+            <AddAndEditCurrency
+                :currency="currency"
+                :urlCurrency="urlCurrency"
+                @createCurrency="createCurrency"
+                @editCurrency="editCurrency"
+                @deleteCurrency="deleteCurrency"
+            />
+        </div>
+    </div>
+    
 </template>
 
+<style scoped>
+.body{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+</style>

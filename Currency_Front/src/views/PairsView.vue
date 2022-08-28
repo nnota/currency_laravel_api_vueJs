@@ -1,10 +1,12 @@
 <script>
 import axios from "axios";
 import AddAndEditPair from "@/components/AddAndEditPair.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   components: {
     AddAndEditPair,
+    Header,
   },
   emits: ["getCurrency", "getPairs","getConverts", "connexion", "logout"],
   props: {
@@ -29,7 +31,6 @@ export default {
   },
   methods: {
     editCurrency(id, currencyNameEdit) {
-      console.log(id, currencyNameEdit);
       axios
         .put(`${this.urlCurrency}/${id}`, {
           name: currencyNameEdit,
@@ -42,7 +43,6 @@ export default {
         });
     },
     createPairs(pairCurrencyInit, pairCurrencyDest, rate) {
-      console.log(pairCurrencyInit, pairCurrencyDest, rate);
       axios
         .post(this.urlPairs, {
           currency_init: pairCurrencyInit,
@@ -50,7 +50,6 @@ export default {
           rate: rate,
         })
         .then((result) => {
-          console.log(result["data"]);
           this.createConvert(result["data"]);
           this.$emit("getPairs");
         })
@@ -64,7 +63,6 @@ export default {
           rate: 1 / rate,
         })
         .then((result) => {
-          console.log(result["data"]);
           this.createConvert(result["data"]);
           this.$emit("getPairs");
         })
@@ -73,7 +71,6 @@ export default {
         });
     },
     createConvert(pairId) {
-      console.log(this.urlConverts);
       axios
         .post(this.urlConverts, {
           id_pair: pairId,
@@ -87,7 +84,6 @@ export default {
         });
     },
     editPair(id, pairInitEdit, pairDestEdit, rateEdit) {
-      console.log(id, pairInitEdit, pairDestEdit, rateEdit);
       axios
         .put(`${this.urlPairs}/${id}`, {
           currency_init: pairInitEdit,
@@ -103,7 +99,6 @@ export default {
         });
     },
     deletePair(id) {
-      console.log(id, `${this.urlPairs}/${id}`);
       axios
         .delete(`${this.urlPairs}/${id}`)
         .then(() => {
@@ -115,19 +110,37 @@ export default {
           alert(e);
         });
     },
+    logout(){
+        this.$emit("logout");
+    }
   },
   created() {},
 };
 </script>
 <template>
-  <AddAndEditPair
-    :currency="currency"
-    :pairs="pairs"
-    :converts="converts"
-    :urlPairs="urlPairs"
-    @createPairs="createPairs"
-    @editPair="editPair"
-    @deletePair="deletePair"
-  />
+  
+  <Header
+        @logout="logout"
+    />
+    <div class="body">
+        <div >
+            <AddAndEditPair
+                :currency="currency"
+                :pairs="pairs"
+                :converts="converts"
+                :urlPairs="urlPairs"
+                @createPairs="createPairs"
+                @editPair="editPair"
+                @deletePair="deletePair"
+            />
+        </div>
+    </div>
 </template>
-
+<style scoped>
+.body{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+</style>

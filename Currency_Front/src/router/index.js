@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 
 
@@ -20,33 +19,34 @@ const router = createRouter({
       }
     },
     {
-      path: "/admin",
-      name: "admin",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AdminView.vue"),
-      // beforeEnter: checkLogin,
-      beforeEnter() {
-        if (localStorage.getItem("access_token") == null){
-              return { path: "/login"}
-        }
-      }
-    },
-    {
       path: "/login",
       name: "login",
       component: LoginView,
+      beforeEnter() {
+        if (localStorage.getItem("access_token") != null){
+              return { path: "/admin/currencies"}
+        }
+      },
     },
     {
       path: "/admin/currencies",
       name: "currencies",
       component: () => import("../views/CurrenciesView.vue"),
+      beforeEnter() {
+        if (localStorage.getItem("access_token") == null){
+              return { path: "/login"}
+        }
+      },
     },
     {
       path: "/admin/pairs",
       name: "pairs",
       component: () => import("../views/PairsView.vue"),
+      beforeEnter() {
+        if (localStorage.getItem("access_token") == null){
+              return { path: "/login"}
+        }
+      }
     },
   ],
 });

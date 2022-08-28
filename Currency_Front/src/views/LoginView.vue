@@ -10,21 +10,17 @@ export default {
             password:"",
         };
     },
-    emits: ["connexion", "logout"],
+    emits: ["connexion"],
     methods: {
         connexion(){
             this.$emit("connexion", this.email, this.password);
         },
-        logout(){
-            this.$emit("logout");
-        }
-        
     },
     created() {
     }
 };
 </script>
-<template >
+<template>
     <div class="body">
         <div>
             <p class="titre">Connexion</p>
@@ -53,17 +49,17 @@ export default {
                     </div>
                 </div>
             </form>
-            <button v-on:click.prevent="logout">
-                Logout
-            </button>
         </div>
     </div>
 
 </template>
 <style scoped>
+    template{
+        margin-top: 200px;
+    }
     .body {
-        background-color: #f5f5f5;
-        padding: 50px 40px 50px 40px;
+
+        padding: 50px ;
         border-radius: 25px;
         font-size: 18px;
         display: flex;

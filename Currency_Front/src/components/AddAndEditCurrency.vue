@@ -3,8 +3,8 @@
     <h3>Modifier les devises</h3>
     <div v-for="item in currency" v-bind:value="item.id" class="row">
       <p>{{ item.name }}</p>
-      <button @click="editChoose(item.id)">Modifier</button>
-      <button @click="deleteCurrency(item.id)">Supprimer</button>
+      <button class="buttonEdit" @click="editChoose(item.id)">Modifier</button>
+      <button class="buttonEdit buttonDelete" @click="deleteCurrency(item.id)">Supprimer</button>
       <div v-if="edit == true && idEdit == item.id">
         <form @submit.prevent="editCurrency">
           <label>Name de devise</label>
@@ -20,10 +20,10 @@
   </div>
   <div class="my-form">
     <h3>Ajouter une nouvelle devise</h3>
-    <form class="ui form" @submit.prevent="createCurrency">
-      <div class="fields">
-        <div class="four wide field">
-          <label>Nom de la devise</label>
+    <form @submit.prevent="createCurrency">
+      <div>
+        <div >
+          <label>Nom de la devise</label> <br>
           <input
             type="text"
             name="currency_name"
@@ -31,8 +31,8 @@
             v-model="currencyName"
           />
         </div>
-        <div class="two wide field">
-          <button type="submit">submit</button>
+        <div class="buttonSubmi">
+          <button type="submit">Envoyer</button>
         </div>
       </div>
     </form>
@@ -103,14 +103,24 @@ export default {
 *:before,
 *:after {
   box-sizing: border-box;
+  
+}
+h3{
+  font-size: 25px;
+  margin-bottom: 20px ;
+  margin-top: 20px;
+  color: #493936;
 }
 
 body {
-  padding: 1em;
+  padding: 5em;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   color: #b9b9b9;
   background-color: #e3e3e3;
+  display: flex;
+  justify-content:center;
+  align-items: center;
 }
 input,
 button {
@@ -126,15 +136,33 @@ button {
   transition: 0.35s ease-in-out;
   transition: all 0.35s ease-in-out;
 }
+.buttonEdit{
+  margin-left: 10px;
+}
 
 input:focus {
   outline: 0;
   border-color: #64ac15;
 }
-button {
+input,button {
   cursor: pointer;
+  border-radius: 15px;
 }
 .row {
   display: flex;
+  margin-top: 10px;
+}
+.data{
+  margin-top:40px;
+ 
+}
+.buttonSubmi{
+  margin-top:10px;
+}
+p{
+  margin-top:10px;
+}
+.buttonDelete{
+  color:red;
 }
 </style>

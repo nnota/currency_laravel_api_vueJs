@@ -1,4 +1,5 @@
 <script>
+
 import { RouterLink, RouterView } from "vue-router";
 import axios from "axios";
 
@@ -43,7 +44,7 @@ export default {
             if (data["message"] == "User login successfully."){
                 localStorage.setItem("access_token", data["data"]["token"]);
                 localStorage.setItem("nameAdmin", data["data"]["name"]);
-                this.$router.push("/admin");
+                this.$router.push("/admin/currencies");
             };
         })
         .catch((error) => {
@@ -54,10 +55,6 @@ export default {
     logout()
     {
       let token = localStorage.getItem("access_token");
-      // console.log(`Bearer ${token}`);
-      console.log({
-          'Authorization': 'Bearer '+token,
-        }),
       axios.post('http://127.0.0.1:8000/api/logout', null, {
         
         headers : {
@@ -67,12 +64,14 @@ export default {
         
       })
       .then(({data}) => {
+        this.$router.push("/login");
         localStorage.removeItem('nameAdmin');
         localStorage.removeItem('access_token');
+       
           
       })
       .catch((error) => {
-          console.log(error);
+          window.alert("Vous ne pouvez pas se déconnacter ")
       });
 
     },
